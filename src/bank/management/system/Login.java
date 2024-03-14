@@ -80,7 +80,7 @@ public class Login extends JFrame implements ActionListener {
         button3.addActionListener(this);
         add(button3);
 
-        ImageIcon iii1 = new ImageIcon(ClassLoader.getSystemResource("icon/backbg.png"));
+        ImageIcon iii1 = new ImageIcon(ClassLoader.getSystemResource("icon/twilight.jpg"));
         Image iii2 = iii1.getImage().getScaledInstance(850,480,Image.SCALE_DEFAULT);
         ImageIcon iii3 = new ImageIcon(iii2);
         JLabel iiimage = new JLabel(iii3);
@@ -97,35 +97,49 @@ public class Login extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        try{
-            if (e.getSource()==button1){
+        try {
+            if (e.getSource() == button1) {
                 Connn c = new Connn();
                 String cardno = textField2.getText();
                 String pin = passwordField3.getText();
-                String q = "select * from login where card_number = '"+cardno+"' and  pin = '"+pin+"'";
+
+                String q = "select * from login where card_number = '" + cardno + "' and  pin = '" + pin + "'";
                 ResultSet resultSet = c.statement.executeQuery(q);
-                if (resultSet.next()){
+                System.out.println(resultSet);
+                // Check if the resultSet has at least one row
+                if (resultSet.next()) {
+                    // Assuming you have a table with columns named "column1", "column2", etc.
+                    String column1Value = resultSet.getString("card_number");
+                    String column2Value = resultSet.getString("pin");
+                    String form_no = resultSet.getString("form_no");
+                    // Print out the values
+                    System.out.println("Column 1: " + column1Value);
+                    System.out.println("Column 2: " + column2Value);
+                    System.out.println("Form Number: " + form_no);
+                    // Now that we've checked one row, we don't need to check again with resultSet.next()
                     setVisible(false);
-                    new main_Class(pin);
-                }else {
-                    JOptionPane.showMessageDialog(null,"Incorrect Card Number or PIN");
+                    new main_Class(pin, form_no);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Incorrect Card Number or PIN");
                 }
-
-
-            }else if (e.getSource() == button2){
+            } else if (e.getSource() == button2) {
                 textField2.setText("");
                 passwordField3.setText("");
-            }else if (e.getSource() == button3){
+            } else if (e.getSource() == button3) {
                 new Signup();
                 setVisible(false);
             }
-        }catch (Exception E){
+        } catch (Exception E) {
             E.printStackTrace();
         }
-
     }
 
     public static void main(String[] args) {
         new Login();
     }
 }
+
+//do not touch: 1409963089013024' OR '1=1''
+//admin' OR '1'='1
+//admin'--
+//DELETE FROM `bank` LIMIT 1

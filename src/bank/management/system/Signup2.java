@@ -4,13 +4,33 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 public class Signup2 extends JFrame implements ActionListener {
     JComboBox comboBox,comboBox2,comboBox3,comboBox4,comboBox5;
     JTextField textPan,textAadhar;
+
     JRadioButton r1,r2, e1,e2;
     JButton next;
     String formno;
+
+
+    public static long randomAccountNumber() {
+        Random rand = new Random();
+        // Generate a random number with 9 digits
+        long randomNumber = rand.nextLong() % 10000000000L;
+        return Math.abs(randomNumber); // Ensure the account number is positive
+    }
+
+    public static long randomBVN() {
+        Random rand = new Random();
+        // Generate a random number with 11 digits
+        long randomNumber = rand.nextLong() % 1000000000000L;
+        System.out.println("random bvn direct"+ randomNumber);
+        return Math.abs(randomNumber); // Ensure the BVN is positive
+    }
+
+
     Signup2(String formno){
         super("APPLICATION FORM");
 
@@ -38,7 +58,7 @@ public class Signup2 extends JFrame implements ActionListener {
         l3.setBounds(100,120,100,30);
         add(l3);
 
-        String religion[] = {"Hindu","Muslim","Sikh", "Christian", "Other"};
+        String religion[] = {"Christian","Muslim","jewish", "traditionalist", "Other"};
         comboBox = new JComboBox(religion);
         comboBox.setBackground(new Color(252,208,76));
         comboBox.setFont(new Font("Raleway",Font.BOLD,14));
@@ -69,7 +89,7 @@ public class Signup2 extends JFrame implements ActionListener {
         comboBox3.setBounds(350,220,320,30);
         add(comboBox3);
 
-        JLabel l6 = new JLabel("Educational : ");
+        JLabel l6 = new JLabel("Education : ");
         l6.setFont(new Font("Raleway", Font.BOLD,18));
         l6.setBounds(100,270,150,30);
         add(l6);
@@ -94,7 +114,7 @@ public class Signup2 extends JFrame implements ActionListener {
         comboBox5.setBounds(350,340,320,30);
         add(comboBox5);
 
-        JLabel l8 = new JLabel("PAN Number : ");
+        JLabel l8 = new JLabel("Account Number : ");
         l8.setFont(new Font("Raleway", Font.BOLD,18));
         l8.setBounds(100,390,150,30);
         add(l8);
@@ -102,9 +122,11 @@ public class Signup2 extends JFrame implements ActionListener {
         textPan = new JTextField();
         textPan.setFont(new Font("Raleway", Font.BOLD,18));
         textPan.setBounds(350,390,320,30);
+        String accountnumber = Long.toString(randomAccountNumber());
+        textPan.setText(accountnumber);
         add(textPan);
 
-        JLabel l9 = new JLabel("Aadhar Number : ");
+        JLabel l9 = new JLabel("BVN Number : ");
         l9.setFont(new Font("Raleway", Font.BOLD,18));
         l9.setBounds(100,440,180,30);
         add(l9);
@@ -112,6 +134,9 @@ public class Signup2 extends JFrame implements ActionListener {
         textAadhar = new JTextField();
         textAadhar.setFont(new Font("Raleway", Font.BOLD,18));
         textAadhar.setBounds(350,440,320,30);
+        String BVN = Long.toString(randomBVN());
+        System.out.println("refined"+BVN);
+        textAadhar.setText(BVN);
         add(textAadhar);
 
 
@@ -169,7 +194,24 @@ public class Signup2 extends JFrame implements ActionListener {
         setLayout(null);
         setSize(850,750);
         setLocation(450,80);
-        getContentPane().setBackground(new Color(252, 208, 76));
+
+//        getContentPane().setBackground(new Color(252, 208, 76));
+
+        // Set layout to BorderLayout
+        setLayout(new BorderLayout());
+
+        ImageIcon iii1 = new ImageIcon(ClassLoader.getSystemResource("icon/boat.png"));
+        Image iii2 = iii1.getImage().getScaledInstance(850,750,Image.SCALE_DEFAULT);
+        ImageIcon iii3 = new ImageIcon(iii2);
+        JLabel iiimage = new JLabel(iii3);
+//        iiimage.setBounds(0,0,850,700);
+        iiimage.setLayout(new BorderLayout()); // Set layout of JLabel to BorderLayout
+
+        add(iiimage);
+
+
+
+
         setVisible(true);
     }
 

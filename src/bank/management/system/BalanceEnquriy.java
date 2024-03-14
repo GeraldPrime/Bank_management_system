@@ -9,10 +9,12 @@ import java.sql.ResultSet;
 public class BalanceEnquriy extends JFrame implements ActionListener {
 
     String pin;
+    static String form_no;
     JLabel label2;
     JButton b1;
-    BalanceEnquriy(String pin){
+    BalanceEnquriy(String pin, String form_no){
         this.pin =pin;
+        BalanceEnquriy.form_no = form_no;
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/atm2.png"));
         Image i2 = i1.getImage().getScaledInstance(1550,830,Image.SCALE_DEFAULT);
@@ -21,7 +23,7 @@ public class BalanceEnquriy extends JFrame implements ActionListener {
         l3.setBounds(0,0,1550,830);
         add(l3);
 
-        JLabel label1 = new JLabel("Your Current Balance is Rs ");
+        JLabel label1 = new JLabel("Your Current Balance is  ");
         label1.setForeground(Color.WHITE);
         label1.setFont(new Font("System", Font.BOLD, 16));
         label1.setBounds(430,180,700,35);
@@ -40,22 +42,33 @@ public class BalanceEnquriy extends JFrame implements ActionListener {
         b1.addActionListener(this);
         l3.add(b1);
 
-        int balance =0;
-        try{
+//        int balance =0;
+//        try{
+//            Connn c = new Connn();
+//            ResultSet resultSet = c.statement.executeQuery("Select * from bank where pin = '"+pin+"'");
+//            while (resultSet.next()){
+//                if (resultSet.getString("type").equals("Deposit")){
+//                    balance += Integer.parseInt(resultSet.getString("amount"));
+//                }else {
+//                    balance -= Integer.parseInt(resultSet.getString("amount"));
+//                }
+//            }
+//        }catch (Exception e){
+//            System.out.println(e.getMessage());;
+//        }
+        try {
             Connn c = new Connn();
-            ResultSet resultSet = c.statement.executeQuery("Select * from bank where pin = '"+pin+"'");
-            while (resultSet.next()){
-                if (resultSet.getString("type").equals("Deposit")){
-                    balance += Integer.parseInt(resultSet.getString("amount"));
-                }else {
-                    balance -= Integer.parseInt(resultSet.getString("amount"));
-                }
+            ResultSet resultSet = c.statement.executeQuery("Select * from bank where pin = '" + pin + "'");
+            if (resultSet.next()) {
+                int balance = resultSet.getInt("balance");
+
+                label2.setText(" $"+balance);
             }
         }catch (Exception e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
-        label2.setText(""+balance);
+
 
         setLayout(null);
         setSize(1550,1080);
@@ -66,10 +79,10 @@ public class BalanceEnquriy extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         setVisible(false);
-        new main_Class(pin);
+        new main_Class(pin, form_no);
     }
 
     public static void main(String[] args) {
-        new BalanceEnquriy("");
+        new BalanceEnquriy("", form_no);
     }
 }

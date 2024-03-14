@@ -4,15 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.util.Date;
 
 public class Deposit extends JFrame implements ActionListener {
    String pin;
+   static String form_no;
    TextField textField;
 
    JButton b1, b2;
-    Deposit(String pin){
+    Deposit(String pin, String form_no){
         this.pin = pin;
+        Deposit.form_no = form_no;
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/atm2.png"));
         Image i2 = i1.getImage().getScaledInstance(1550,830,Image.SCALE_DEFAULT);
@@ -56,6 +59,8 @@ public class Deposit extends JFrame implements ActionListener {
         setLocation(0,0);
         setVisible(true);
 
+
+        System.out.println("hail the pin"+pin);
     }
 
     @Override
@@ -63,27 +68,59 @@ public class Deposit extends JFrame implements ActionListener {
         try {
             String amount = textField.getText();
             Date date = new Date();
-            if (e.getSource()==b1){
-                if (textField.getText().equals("")){
-                    JOptionPane.showMessageDialog(null,"Please enter the Amount you want to Deposit");
-                }else {
-                    Connn c = new Connn();
-                    c.statement.executeUpdate("insert into bank values('"+pin+"', '"+date+"','Deposit', '"+amount+"')");
-                    JOptionPane.showMessageDialog(null,"Rs. "+amount+" Deposited Successfully");
-                    setVisible(false);
-                    new main_Class(pin);
-                }
-            }else if (e.getSource()==b2){
-                setVisible(false);
-                new main_Class(pin);
-            }
-        }catch (Exception E){
-            E.printStackTrace();
-        }
 
+            System.out.println("hail the pin"+pin);
+            if (e.getSource() == b1) {
+                if (textField.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please enter the amount you want to deposit");
+                } else {
+                    Connn c = new Connn();
+                    ResultSet resultSet = c.statement.executeQuery("SELECT * FROM bank WHERE pin = '" + pin + "'");
+                    if (resultSet.next()) {
+                        int balance = resultSet.getInt("balance");
+                        System.out.println( "the result: "+pin+"  "+ balance);
+
+                        if (Integer.parseInt(amount) == 0) {
+                            JOptionPane.showMessageDialog(null, "You cannot deposit zero. Please enter a valid amount.");
+                            return;
+                        }
+
+                        System.out.println( "the result: "+pin+"  "+ balance);
+                        int newBalance = balance + Integer.parseInt(amount);
+
+                        // Update the balance in the bank table
+                        c.statement.executeUpdate("UPDATE bank SET balance = " + newBalance + " WHERE pin = '" + pin + "'");
+
+                        // Insert the deposit transaction into the transaction table
+                        c.statement.executeUpdate("INSERT INTO bank (pin, date, type, amount, balance) " +
+                                "VALUES ('" + pin + "', '" + date + "', " +
+                                "'deposit', '" + amount + "', '" + newBalance + "')");
+
+                        JOptionPane.showMessageDialog(null, "$" + amount + " deposited successfully.");
+                        setVisible(false);
+                        new main_Class(pin, form_no);
+                    } else if(!resultSet.next()){
+
+                        c.statement.executeUpdate("insert into bank(pin,date,type,amount,balance) values('"+pin+"', '"+date+"','Deposit', '"+amount+"','"+amount+"')");
+                        JOptionPane.showMessageDialog(null,"$. "+amount+" Deposited Successfully");
+                        setVisible(false);
+                        new main_Class(pin,form_no);
+
+                    }else {
+                        JOptionPane.showMessageDialog(null, "Error: Account not found.");
+                    }
+                }
+            } else if (e.getSource() == b2) {
+                setVisible(false);
+                new main_Class(pin, form_no);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
+
     public static void main(String[] args) {
-        new Deposit("");
+        new Deposit("", form_no);
     }
 }

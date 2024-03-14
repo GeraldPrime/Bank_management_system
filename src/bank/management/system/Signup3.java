@@ -1,11 +1,9 @@
 package bank.management.system;
 
-import javax.print.attribute.standard.JobHoldUntil;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.rmi.server.ExportException;
 import java.util.Random;
 
 public class Signup3 extends JFrame implements ActionListener {
@@ -13,10 +11,10 @@ public class Signup3 extends JFrame implements ActionListener {
     JRadioButton r1,r2,r3,r4;
     JCheckBox c1,c2,c3,c4,c5,c6;
     JButton s,c;
-    String formno;
-    Signup3(String formno){
+    String form_no;
+    Signup3(String form_no){
 
-        this.formno = formno;
+        this.form_no = form_no;
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/bank.png"));
         Image i2 = i1.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT);
@@ -157,7 +155,7 @@ public class Signup3 extends JFrame implements ActionListener {
         l12.setBounds(700,10,100,30);
         add(l12);
 
-        JLabel l13 = new JLabel(formno);
+        JLabel l13 = new JLabel(form_no);
         l13.setFont(new Font("Raleway", Font.BOLD,14));
         l13.setBounds(760,10,60,30);
         add(l13);
@@ -179,10 +177,21 @@ public class Signup3 extends JFrame implements ActionListener {
         c.addActionListener(this);
         add(c);
 
-        getContentPane().setBackground(new Color(215,252,252));
+//        getContentPane().setBackground(new Color(215,252,252));
         setSize(850,800);
         setLayout(null);
         setLocation(400,20);
+
+
+        ImageIcon iii1 = new ImageIcon(ClassLoader.getSystemResource("icon/coinPlant.png"));
+        Image iii2 = iii1.getImage().getScaledInstance(850,800,Image.SCALE_DEFAULT);
+        ImageIcon iii3 = new ImageIcon(iii2);
+        JLabel iiimage = new JLabel(iii3);
+        iiimage.setBounds(0,0,850,700);
+
+
+        add(iiimage);
+
         setVisible(true);
     }
 
@@ -206,6 +215,8 @@ public class Signup3 extends JFrame implements ActionListener {
         long first3 = (ran.nextLong() % 9000L)+ 1000L;
         String pin = "" + Math.abs(first3);
 
+
+
         String fac = "";
         if(c1.isSelected()){
             fac = fac+"ATM CARD ";
@@ -227,12 +238,12 @@ public class Signup3 extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(null,"Fill all the fields");
                 }else {
                     Connn c1 = new Connn();
-                    String q1 = "insert into signupthree values('"+formno+"', '"+atype+"','"+cardno+"','"+pin+"','"+fac+"')";
-                    String q2 = "insert into login values('"+formno+"','"+cardno+"','"+pin+"')";
+                    String q1 = "insert into signupthree values('"+form_no+"', '"+atype+"','"+cardno+"','"+pin+"','"+fac+"')";
+                    String q2 = "insert into login values('"+form_no+"','"+cardno+"','"+pin+"')";
                     c1.statement.executeUpdate(q1);
                     c1.statement.executeUpdate(q2);
                     JOptionPane.showMessageDialog(null,"Card Number : "+cardno+"\n Pin : "+pin );
-                    new Deposit(pin);
+                    new Deposit(pin, form_no);
                     setVisible(false);
                 }
             } else if (e.getSource()==c) {

@@ -4,13 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 
 public class Pin extends JFrame implements ActionListener {
     JButton b1,b2;
     JPasswordField p1,p2;
     String pin;
-    Pin(String pin){
+    static String form_no;
+    Pin(String pin, String form_no){
         this.pin =pin;
+        this.form_no = form_no;
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/atm2.png"));
         Image i2 = i1.getImage().getScaledInstance(1550,830,Image.SCALE_DEFAULT);
@@ -78,54 +81,52 @@ public class Pin extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        try{
-
+        try {
             String pin1 = p1.getText();
             String pin2 = p2.getText();
 
-            if (!pin1.equals(pin2)){
-                JOptionPane.showMessageDialog(null,"Entered PIN does not match");
+            if (!pin1.equals(pin2)) {
+                JOptionPane.showMessageDialog(null, "Entered PINs do not match");
                 return;
             }
-            if (e.getSource()==b1){
-                if (p1.getText().equals("")){
-                    JOptionPane.showMessageDialog(null,"Enter New PIN");
-                    return;
-                }
-                if (p2.getText().equals("")){
-                    JOptionPane.showMessageDialog(null,"Re-Enter New PIN");
-                    return;
-                }
 
-                Connn c = new Connn();
-                String q1 = "update bank set pin = '"+pin1+"' where pin = '"+pin+"'";
-                String q2 = "update login set pin = '"+pin1+"' where pin = '"+pin+"'";
-                String q3 = "update signupthree set pin = '"+pin1+"' where pin = '"+pin+"'";
+            Connn c = new Connn();
 
-                c.statement.executeUpdate(q1);
-                c.statement.executeUpdate(q2);
-                c.statement.executeUpdate(q3);
+            // Check if the new PIN already exists in the database
+            String pinCheckQuery = "SELECT COUNT(*) FROM login WHERE pin = '" + pin1 + "'";
+            ResultSet pinCheckResult = c.statement.executeQuery(pinCheckQuery);
+            pinCheckResult.next();
+            int pinCount = pinCheckResult.getInt(1);
 
-                JOptionPane.showMessageDialog(null,"PIN changed successfully");
-                setVisible(false);
-                new main_Class(pin);
-
-            } else if (e.getSource()==b2) {
-                new main_Class(pin);
-                setVisible(false);
+            if (pinCount > 0) {
+                JOptionPane.showMessageDialog(null, "The entered PIN already exists. Please choose a different PIN.");
+                return;
             }
 
+            if (e.getSource() == b1) {
+                if (pin1.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please enter a new PIN");
+                    return;
+                }
 
-        }catch (Exception E){
-            E.printStackTrace();
+                // Update the PIN in the database
+                String updateQuery = "UPDATE login SET pin = '" + pin1 + "' WHERE pin = '" + pin + "'";
+                c.statement.executeUpdate(updateQuery);
+
+                JOptionPane.showMessageDialog(null, "PIN changed successfully");
+                setVisible(false);
+                new main_Class(pin1, form_no);
+            } else if (e.getSource() == b2) {
+                new main_Class(pin, form_no);
+                setVisible(false);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-
-
-
     }
 
+
     public static void main(String[] args) {
-        new Pin("");
+        new Pin("", form_no);
     }
 }

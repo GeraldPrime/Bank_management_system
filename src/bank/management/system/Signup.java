@@ -14,6 +14,7 @@ public class Signup extends JFrame implements ActionListener {
 
     JTextField textName ,textFname, textEmail,textAdd,textcity,textState,textPin;
     JDateChooser dateChooser;
+
     Random ran = new Random();
     long first4 =(ran.nextLong() % 9000L) +1000L;
     String first = " " + Math.abs(first4);
@@ -158,7 +159,7 @@ public class Signup extends JFrame implements ActionListener {
         add(labelPin);
 
         textPin = new JTextField();
-        textPin.setFont(new Font("Raleway",Font.BOLD, 14));
+        textPin.setFont(new Font("Rale-way",Font.BOLD, 14));
         textPin.setBounds(300,590,400,30);
         add(textPin);
 
@@ -180,12 +181,25 @@ public class Signup extends JFrame implements ActionListener {
         next.addActionListener(this);
         add(next);
 
-        getContentPane().setBackground(new Color(222,255,228));
+//        getContentPane().setBackground(new Color(222,255,228));
         setLayout(null);
         setSize(850,800);
         setLocation(360,40);
-        setVisible(true);
 
+
+        // Set layout to BorderLayout
+        setLayout(new BorderLayout());
+
+        ImageIcon iii1 = new ImageIcon(ClassLoader.getSystemResource("icon/boat.png"));
+        Image iii2 = iii1.getImage().getScaledInstance(850,800,Image.SCALE_DEFAULT);
+        ImageIcon iii3 = new ImageIcon(iii2);
+        JLabel iiimage = new JLabel(iii3);
+//        iiimage.setBounds(0,0,850,700);
+        iiimage.setLayout(new BorderLayout()); // Set layout of JLabel to BorderLayout
+
+        add(iiimage);
+
+        setVisible(true);
     }
 
     @Override
@@ -216,9 +230,12 @@ public class Signup extends JFrame implements ActionListener {
         String pincode = textPin.getText();
         String state = textState.getText();
 
+
+
+
         try{
-            if (textName.getText().equals("")){
-                JOptionPane.showMessageDialog(null, "Fill all the fields");
+            if (name.isEmpty() || fname.isEmpty() || dob.isEmpty() || address.isEmpty() || state.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Fields cannot be empty!");
             }else {
                 Connn c = new Connn();
                 String q = "insert into signup values('"+formno+"', '"+name+"','"+fname+"','"+dob+"','"+gender+"','"+email+"','"+marital+"', '"+address+"', '"+city+"','"+pincode+"','"+state+"' )";
