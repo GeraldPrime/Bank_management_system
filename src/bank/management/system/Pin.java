@@ -90,6 +90,7 @@ public class Pin extends JFrame implements ActionListener {
                 return;
             }
 
+
             Connn c = new Connn();
 
             // Check if the new PIN already exists in the database
@@ -108,10 +109,18 @@ public class Pin extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Please enter a new PIN");
                     return;
                 }
+                if(pin1.length()!=4){
+                    JOptionPane.showMessageDialog(null, "pin must be 4 digits");
+                    return;
+                }
 
                 // Update the PIN in the database
                 String updateQuery = "UPDATE login SET pin = '" + pin1 + "' WHERE pin = '" + pin + "'";
+                String SecondUpdateQuery = "UPDATE bank SET pin = '" + pin1 + "' WHERE pin = '" + pin + "'";
+                String thirdUpdateQuery = "UPDATE signupthree SET pin = '" + pin1 + "' WHERE form_no = '" + form_no + "'";
                 c.statement.executeUpdate(updateQuery);
+                c.statement.executeUpdate(SecondUpdateQuery);
+                c.statement.executeUpdate(thirdUpdateQuery);
 
                 JOptionPane.showMessageDialog(null, "PIN changed successfully");
                 setVisible(false);

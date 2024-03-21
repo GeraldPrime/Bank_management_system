@@ -85,6 +85,10 @@ public class Withdrawl extends JFrame implements ActionListener {
                             JOptionPane.showMessageDialog(null, "You cannot withdraw zero. Please enter a valid amount.");
                             return;
                         }
+                        if ( balance < Integer.parseInt(amount)){
+                            JOptionPane.showMessageDialog(null, "Insuffient Balance");
+                            return;
+                        }
 
                         int newBalance = balance - Integer.parseInt(amount);
 

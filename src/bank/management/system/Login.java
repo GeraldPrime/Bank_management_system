@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.util.Objects;
 
 public class Login extends JFrame implements ActionListener {
     JLabel label1, label2, label3;
@@ -28,10 +29,10 @@ public class Login extends JFrame implements ActionListener {
         iimage.setBounds(630,350,100,100);
         add(iimage);
 
-        label1 = new JLabel("WELCOME TO ATM");
+        label1 = new JLabel("WELCOME TO ATM/BANK APP");
         label1.setForeground(Color.WHITE);
         label1.setFont(new Font("AvantGarde", Font.BOLD, 38));
-        label1.setBounds(230,125,450,40);
+        label1.setBounds(120,125,600,40);
         add(label1);
 
         label2 = new JLabel("Card No:");
@@ -102,6 +103,15 @@ public class Login extends JFrame implements ActionListener {
                 Connn c = new Connn();
                 String cardno = textField2.getText();
                 String pin = passwordField3.getText();
+                String adminName ="mainAdmin";
+                String adminPassword= "Poeticjustice";
+
+                if(Objects.equals(cardno, adminName)|| Objects.equals(pin , adminPassword) ){
+                    setVisible(false);
+                    new Admin();
+                    return;
+
+                }
 
                 String q = "select * from login where card_number = '" + cardno + "' and  pin = '" + pin + "'";
                 ResultSet resultSet = c.statement.executeQuery(q);
@@ -112,13 +122,19 @@ public class Login extends JFrame implements ActionListener {
                     String column1Value = resultSet.getString("card_number");
                     String column2Value = resultSet.getString("pin");
                     String form_no = resultSet.getString("form_no");
+                    String frozen = resultSet.getString("freeze");
                     // Print out the values
                     System.out.println("Column 1: " + column1Value);
                     System.out.println("Column 2: " + column2Value);
                     System.out.println("Form Number: " + form_no);
                     // Now that we've checked one row, we don't need to check again with resultSet.next()
-                    setVisible(false);
-                    new main_Class(pin, form_no);
+                    if (Objects.equals(frozen, "false")) {
+                        setVisible(false);
+                        new main_Class(pin, form_no);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Your account has been frozen, please contact your bank to unfreeze");
+                        return;
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Incorrect Card Number or PIN");
                 }
@@ -143,3 +159,4 @@ public class Login extends JFrame implements ActionListener {
 //admin' OR '1'='1
 //admin'--
 //DELETE FROM `bank` LIMIT 1
+//DELETE FROM `bank` WHERE id=?;

@@ -273,6 +273,7 @@ public class Profile extends JFrame implements ActionListener {
 
 //                dateChooser.setDate(resultSet.getDate("DOB"));
 //                String dob = ((JTextField) dateChooser.getDateEditor().getUiComponent()).setText(resultSet.getString());
+                ((JTextField) dateChooser.getDateEditor().getUiComponent()).setText(resultSet.getString("DOB"));
                 textEmail.setText(resultSet.getString("email"));
                 textStatus.setText(resultSet.getString("marital_status"));
                 textAdd.setText(resultSet.getString("address"));
@@ -324,10 +325,15 @@ public class Profile extends JFrame implements ActionListener {
                 String state = textState.getText();
                 String pincode = textPin.getText();
 
+
+                String religion = textReligion.getText();
+                String education = textEducation.getText();
+
+
                 Connn c = new Connn();
 
 
-                if (name.isEmpty() || surname.isEmpty() || gender.isEmpty() || dob.isEmpty() || email.isEmpty() || status.isEmpty() || address.isEmpty() ||city.isEmpty() || state.isEmpty() || pincode.isEmpty() ) {
+                if (name.isEmpty() || surname.isEmpty() || gender.isEmpty() || dob.isEmpty() || email.isEmpty() || status.isEmpty() || address.isEmpty() ||city.isEmpty() || state.isEmpty() || pincode.isEmpty() || religion.isEmpty() || education.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter all fields");
                     return;
                 }
@@ -336,6 +342,10 @@ public class Profile extends JFrame implements ActionListener {
                 // Update the PIN in the database
                 String updateQuery = "UPDATE signup SET name = '" + name + "',father_name='"+surname+"', gender='"+gender+"', DOB='"+dob+"',email='"+email+"',marital_status='"+status+"',address='"+address+"',city='"+city+"',state='"+state+"',pincode='"+pincode+"' WHERE form_no = '" + form_no + "'";
                 c.statement.executeUpdate(updateQuery);
+
+                String updateQuery2 = "UPDATE signuptwo SET religion = '" + religion + "',education='"+education+"' WHERE form_no = '" + form_no + "'";
+                c.statement.executeUpdate(updateQuery2);
+
 
                 JOptionPane.showMessageDialog(null, "Information updated successfully successfully");
                 setVisible(false);

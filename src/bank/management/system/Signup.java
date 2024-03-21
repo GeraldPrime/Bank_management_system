@@ -6,20 +6,77 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public class Signup extends JFrame implements ActionListener {
+public  class Signup extends JFrame implements ActionListener {
     JRadioButton r1,r2,m1,m2,m3;
     JButton next;
 
     JTextField textName ,textFname, textEmail,textAdd,textcity,textState,textPin;
     JDateChooser dateChooser;
 
-    Random ran = new Random();
-    long first4 =(ran.nextLong() % 9000L) +1000L;
-    String first = " " + Math.abs(first4);
+//    Random ran = new Random();
+//    long first4 =(ran.nextLong() % 9000L) +1000L;
+//    String first = " " + Math.abs(first4);
+    String first;
+
+
+
+    static final String FILE_PATH = "formNumbers.txt";//file to store the last num
+
+    public static int getNextFormNumber(){
+        try {
+            Path path = Paths.get(FILE_PATH);
+
+            //check if file exists
+            if (!Files.exists(path)){
+                Files.write(path,"0".getBytes());
+
+            }
+            //read the last number used
+            int lastNumber = Integer.parseInt(Files.readAllLines(path).get(0));
+            int nextNumber = lastNumber + 1; //increment the last number by 1 for the next form
+
+
+
+            //write the new the last number back to file
+            Files.write(path, String.valueOf(nextNumber).getBytes());
+
+
+            return nextNumber;
+
+
+        }catch ( Exception E){
+            E.printStackTrace();
+            System.out.println(E.getMessage());
+            return -1;
+        }
+    }
+
+
+
+
+
+
+
+
+
     Signup(){
+
         super ("APPLICATION FORM");
+
+        int formNumber = getNextFormNumber();
+        System.out.println("the form no :"+formNumber);
+        if (formNumber == -1){
+            JOptionPane.showMessageDialog(null, "form number not available");
+
+            return;
+        }else {
+            first =  String.valueOf(formNumber);
+        }
+
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/bank.png"));
         Image i2 = i1.getImage().getScaledInstance(100,100,Image.SCALE_DEFAULT);
@@ -206,6 +263,7 @@ public class Signup extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         String formno = first;
+
         String name = textName.getText();
         String fname = textFname.getText();
         String dob = ((JTextField) dateChooser.getDateEditor().getUiComponent()).getText();

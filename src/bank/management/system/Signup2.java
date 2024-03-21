@@ -82,7 +82,7 @@ public class Signup2 extends JFrame implements ActionListener {
         l5.setBounds(100,220,100,30);
         add(l5);
 
-        String income [] = {"Null","<1,50,000","<2,50,000", "5,00,000", "Uptp 10,00,000","Above 10,00,000"};
+        String income [] = {"Null","<150,000","<250,000", "500,000", "Uptp 1,000,000","Above 2,000,000"};
         comboBox3 = new JComboBox(income);
         comboBox3.setBackground(new Color(252,208,76));
         comboBox3.setFont(new Font("Raleway",Font.BOLD,14));
@@ -124,6 +124,7 @@ public class Signup2 extends JFrame implements ActionListener {
         textPan.setBounds(350,390,320,30);
         String accountnumber = Long.toString(randomAccountNumber());
         textPan.setText(accountnumber);
+        textPan.setEditable(false);
         add(textPan);
 
         JLabel l9 = new JLabel("BVN Number : ");

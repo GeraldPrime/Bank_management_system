@@ -49,7 +49,7 @@ public class main_Class extends JFrame implements ActionListener {
         b3.addActionListener(this);
         l3.add(b3);
 
-        b4 = new JButton("MINI STATEMENT");
+        b4 = new JButton("BANK STATEMENT");
         b4.setForeground(Color.WHITE);
         b4.setBackground(new Color(65,125,128));
         b4.setBounds(700,318,150,35);
@@ -117,7 +117,9 @@ public class main_Class extends JFrame implements ActionListener {
             System.out.println("going with "+pin +" "+form_no);
             setVisible(false);
         }else if (e.getSource()==b7){
-            System.exit(0);
+//            System.exit(0);
+            new Login();
+            setVisible(false);
         } else if (e.getSource()==b2) {
             new Withdrawl(pin,form_no);
             setVisible(false);
